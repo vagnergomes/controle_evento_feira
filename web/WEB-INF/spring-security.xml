@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	 
+    <http auto-config="true" access-denied-page="/Publico/error/negado.xhtml">
+         
+        <intercept-url pattern="/Comprovante/**" access="ROLE_ADMIN" /> 
+        <!--<intercept-url pattern="/Banca/**" access="ROLE_ADMIN, ROLE_COORD" />-->
+               
+        <form-login login-page="/Publico/login/login.xhtml" 
+                    always-use-default-target="true"
+                    default-target-url="/index.xhtml" 
+                    authentication-failure-url="/Publico/login/login.xhtml?login_error=1"  />
+        
+                <logout logout-success-url="/Publico/page/index.xhtml"  />
+    </http>
+	 	
+    <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <beans:property name="url" value="jdbc:mysql://localhost:3306/feira?useSSL=false" />
+        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <beans:property name="username" value="root" />
+        <beans:property name="password" value="admin" />
+    </beans:bean>
+	    
+    <beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">  
+        <beans:property name="basename" value="classpath:org/springframework/security/messages"/>  
+    </beans:bean>  
+	
+    <authentication-manager>
+        <authentication-provider >
+            <!--<password-encoder hash="md5" />-->
+            <jdbc-user-service data-source-ref="dataSource"
+                                           users-by-username-query="SELECT usuario, senha, 'true' as ativo FROM usuario WHERE usuario = ?"
+                                           authorities-by-username-query="
+                                        SELECT usuario,
+                                                CASE 
+                                                WHEN u.ROLE = 'Administrador' THEN 'ROLE_ADMIN'
+                                                ELSE (CASE WHEN u.ROLE = 'Cliente' THEN 'ROLE_CLIENTE'
+                                                ELSE (CASE WHEN u.ROLE = 'Visitante' THEN 'ROLE_VISITANTE'
+                                                ELSE '' END) END) END AS permissao
+                                        FROM usuario u
+                                        WHERE usuario = ?"
+ />
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

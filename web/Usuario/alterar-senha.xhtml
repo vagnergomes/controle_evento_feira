@@ -1,0 +1,65 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Alterar Senha</ui:define>
+
+    <ui:define name="conteudo">
+        <p:panel style="border: none; margin-left: auto; margin-right: auto;" >
+            <f:facet name="header">               
+                <a class="subtitulo" href="/" > Home </a>&gt; 
+                <a class="subtitulo" href="Perfil.xhtml" > Perfil </a>
+                &gt; Alterar Senha
+            </f:facet>	
+
+            <div class="borderForm" >
+
+                <h3 class="subtituloForm" ><h:graphicImage library="arquivos/imgs/" name="key.svg" width="20" height="20" /> Alterar Senha </h3>
+                <div class="linha" />
+
+                <h:panelGrid styleClass="panelgrid" >
+                    <h:outputLabel styleClass="output" value="A senha deve conter no mínimo 6 e no máximo 20 caracteres." style="color:red;" />
+                </h:panelGrid>
+                <h:panelGrid styleClass="panelgrid" columns="2">
+
+                    <h:outputLabel styleClass="output"  value="Senha atual " />
+                    <p:password styleClass="inputPass" id="senhaAtual" value="#{usuarioMB.senhaAtual}" size="40" maxlength="20"  
+                                promptLabel="Por favor, informe a senha atual" >
+                        <p:ajax rendered="senhaAtual"  listener="#{usuarioMB.validarSenhaAtual()}" />
+                            <f:passThroughAttribute name="placeholder" value="Senha atual" />
+                    </p:password>
+
+                    <h:outputLabel styleClass="output" value="Nova senha " />
+                    <p:password styleClass="inputPass" value="#{usuarioMB.senha}" size="40" maxlength="20" feedback="true" 
+                                promptLabel="Por favor, informe a senha" weakLabel="Senha fraca" 
+                                goodLabel="Senha média" strongLabel="Senha forte" >
+                        <f:passThroughAttribute name="placeholder" value="Nova senha" />
+                    </p:password>
+
+                    <h:outputLabel styleClass="output" value="Confirmar senha " />
+                    <p:password styleClass="inputPass" value="#{usuarioMB.confirmarSenha}" size="40" maxlength="20" feedback="true" 
+                                promptLabel="Por favor, confirme a senha" weakLabel="Senha fraca" 
+                                goodLabel="Senha média" strongLabel="Senha forte" >
+                        <f:passThroughAttribute name="placeholder" value="Confirmar senha" />
+                    </p:password>
+
+                    <p:commandButton styleClass="button" value="Alterar"
+                                     actionListener="#{usuarioMB.alterarSenha()}" >
+                        <p:confirm header="Confirmação" 
+                                   message="Você tem certeza que deseja efetuar essa alteração?" 
+                                   icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </h:panelGrid>
+            </div>
+        </p:panel>
+    </ui:define>
+</ui:composition>

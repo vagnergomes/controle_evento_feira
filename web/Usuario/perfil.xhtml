@@ -1,0 +1,65 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="titulo">Perfil</ui:define>
+
+    <ui:define name="conteudo">
+
+            <div class="borderForm" >
+                <h3 class="subtituloForm" ><h:graphicImage library="arquivos/imgs/" name="avatar.svg" width="20" height="20" />  Meus Dados </h3>
+                <div class="linha" />
+
+                <h:panelGrid styleClass="panelgrid" columns="2" id="painel"
+                             columnClasses="rotulo, campo">
+
+                    <p:outputLabel styleClass="output"  value="Nome " />
+                    <p:inputText styleClass="input" disabled="true" size="40" value="#{usuarioMB.usuario.nome}" label="Nome" validatorMessage="Nome não pode ser vazio." >
+                        <f:passThroughAttribute name="placeholder" value="Nome" />
+                    </p:inputText>
+
+                    <p:outputLabel styleClass="output" value="Usuário " />
+                    <p:inputText styleClass="input" disabled="true"  size="40" maxlength="16" value="#{usuarioMB.usuario.usuario}" label="Usuário" validatorMessage="Usuário não pode ser vazio." >
+                        <f:passThroughAttribute name="placeholder" value="Usuário" />
+                    </p:inputText>
+
+                    <p:outputLabel styleClass="output" value="E-mail " />                    
+
+                    <p:inplace id="editEmail">
+                        <p:inputText styleClass="input" id="email" size="40" value="#{usuarioMB.usuario.email}" requiredMessage="Preencha o campo Email" required="true" validatorMessage="E-mail incorreto">
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            <f:passThroughAttribute name="placeholder" value="Email" />
+                        </p:inputText>
+                    </p:inplace>
+                </h:panelGrid>
+
+                <h3 class="subtituloForm" ><h:graphicImage library="arquivos/imgs/" name="key.svg" width="20" height="20" />  Segurança </h3>
+                <div class="linha" />
+
+                <h:panelGrid styleClass="panelgrid" columns="2" id="painel2">    
+                    <p:outputLabel styleClass="output" value="Senha " />
+                    <a class="subtitulo" href="alterar-senha.xhtml" > Alterar senha </a>
+                </h:panelGrid>
+
+                <h3 class="subtituloForm" ><h:graphicImage library="arquivos/imgs/" name="lock.svg" width="20" height="20" /> Acesso </h3>
+                <div class="linha" />
+
+                <h:panelGrid styleClass="panelgrid" columns="2" id="painel3"
+                             columnClasses="rotulo, campo">
+                    <h:outputLabel styleClass="output" value="Permissão " />
+                    <ui:repeat id="permissao" var="alv" value="#{usuarioMB.usuario.grupos}" >
+                        <h:panelGrid width="600px" columns="1">
+                            <h:outputText styleClass="output" value="#{alv.nomeGrupo} - #{alv.descGrupo}" />
+                        </h:panelGrid>
+                    </ui:repeat>
+
+                    <p:commandButton styleClass="button" value="Salvar" id="botaoSalvar"
+                                     action="#{usuarioMB.alterarDoPerfil()}" />
+                </h:panelGrid>
+            </div>
+    </ui:define>
+</ui:composition>

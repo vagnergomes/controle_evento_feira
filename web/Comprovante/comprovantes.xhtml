@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="margin-left: 10px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Comprovantes </span>
+        </ui:define>
+        <ui:define name="conteudo">
+            <div>
+                <h:form >
+                    <div class="container-fluid" >
+                        <div class="col-md-12" style="margin-top: 40px">          
+                            <!-- <div class="form-group"> 
+                                 <h:outputLink value="#{request.contextPath}/Papel/PJ/cadastro-pj.xhtml" style="float: left;" styleClass="btn btn-primary  btn-space">Novo</h:outputLink>
+                             </div>
+                            -->
+                        </div>
+                        <div class="row" >
+                            <h:panelGrid style="margin-top: 10px;" id='panel_cadastro' width="100%" columns="0"> 
+                                <h:outputLabel value="Feira" class="output-form"  />                
+                                <p:selectOneMenu 
+                                    id="idfeira"
+                                    value="#{comprovanteController.comprovante.feira}"
+                                    converter="feiraConverter"
+                                    class="input"
+                                    required="true"
+                                    requiredMessage="Informe a Feira"
+                                    style="width: 15%; min-width: 250px; float: left; font-weight:bold;">
+
+                                    <f:selectItem
+                                        itemLabel="Selecione a Feira"
+                                        itemValue="" />
+
+                                    <f:selectItems
+                                        value="#{feiraController.lista}"
+                                        var="f"
+                                        itemLabel="#{f.ano} - #{f.descricao} (#{f.dataInicio.date} a #{f.dataFim.date})"
+                                        itemValue="#{f}"
+                                        />
+<!--                                    <f:ajax execute="@this" 
+                                                listener="{comprovanteController.buscarComprovantes(comprovanteController.comprovante.feira)}" />-->
+                                </p:selectOneMenu>
+                                
+                                <h:commandButton  value="Pesquisar" styleClass="btn btn-primary" style="margin-top: 10px;" >
+                                    <f:ajax execute="idfeira" render="table_comp" listener="#{comprovanteController.sessaoComprovantes(comprovanteController.comprovante.feira)}" />
+                                </h:commandButton>
+                            </h:panelGrid>
+                        </div>
+                        <div class="row output-form" style="margin-top: 30px;" >
+                           <!--row-group="orderFixed:[[2,'asc'],[0,'asc']],rowGroup:{dataSrc:3,endRender:null,startRender: function ( rows, group ) {return group +' ('+rows.count()+')';}}"-->
+
+                            <b:dataTable id="table_comp"
+                                         widgetVar="w_table_comp"
+                                         value="#{comprovanteController.lista}" 
+                                         var="c" 
+                                         style="width: 100%; margin: 0 auto;"  
+                                         responsive="true" >
+                                         
+                                <b:dataTableColumn value="#{c.nome}" label="Nome" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" />
+                                <b:dataTableColumn value="#{c.registro}" label="CPF/CNPJ" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" />
+                                <b:dataTableColumn value="#{c.tipo == 'pj'? 'PJ':'PF'}" label="Tipo" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" />
+                                <b:dataTableColumn value="#{c.perfil}" label="Perfil" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" />
+                                <b:dataTableColumn value="#{c.feira.descricao}" label="Feira" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" />
+
+                                <b:dataTableColumn  label="Editar" style="width: 10%;" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" >
+                                    <h:commandLink rendered="#{c.tipo == 'pj'? true:false}" class="btn btn-default"  onclick="PF('dlgl_edit_pj').show();" value="" >
+                                        <h:graphicImage value="/Imagem/icons/editar.png" />
+                                        <f:ajax event="click" listener="#{pessoaJuridicaController.editarPj_comprovante(c)}" render=":form_pj"/>
+                                    </h:commandLink>
+
+                                    <h:commandLink rendered="#{c.tipo == 'pf'? true:false}" class="btn btn-default"  onclick="PF('dlgl_edit_pf').show();" value="" >
+                                        <h:graphicImage value="/Imagem/icons/editar.png" />
+                                        <f:ajax event="click" listener="#{pessoaFisicaController.editarPf_comprovante(c)}" render=":form_pf"/>
+                                    </h:commandLink>
+                                </b:dataTableColumn>
+                                <b:dataTableColumn label="Download" style="width: 10%;" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" >
+                                    <h:commandButton image="/Imagem/icons/baixar.png" value="" styleClass="btn btn-default" onclick="this.form.target = '_blank'" action="#{comprovanteController.gerarComprovanteId(c.idComprovante, true)}"/>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Visualizar" style="width: 10%;" header-style="text-align: center;" content-style="text-align:center; vertical-align: middle;" >
+                                    <h:commandButton image="/Imagem/icons/lupa.png" value="" styleClass="btn btn-primary" onclick="this.form.target = '_blank'" action="#{comprovanteController.gerarComprovanteId(c.idComprovante, false)}"/>
+                                </b:dataTableColumn>
+                            </b:dataTable>
+                        </div> 
+                    </div> 
+
+                </h:form>
+
+                <p:dialog id="id_edit_pj" widgetVar="dlgl_edit_pj" header="Alterar cadastro"  modal="false" minHeight="300" width="350px" resizable="false" closable="true">
+                    <h:form id="form_pj">
+                        <p:messages id="messages" showDetail="true" closable="true" />  
+                        <h:panelGrid  id='panel_cadastro' width="100%" columns="1">
+
+                            <h:outputLabel value="CNPJ" class="output-form required"/>
+                            <p:inputMask id="cnpj" value="#{pessoaJuridicaController.pj.cnpj}"  mask="99.999.999/9999-99" styleClass="form-control input-cpf input" requiredMessage="Informe o CNPJ" required="true" />
+
+                            <h:outputLabel value="Nome" class="output-form required" />
+                            <h:inputText label="nome" value="#{pessoaJuridicaController.pj.nome}" styleClass="form-control input" requiredMessage="Informe o Nome" required="true"/>
+
+                            <h:outputLabel value="E-mail" class="output-form required" />
+                            <h:inputText id="email" value="#{pessoaJuridicaController.contato.email}" styleClass="form-control input" requiredMessage="Informe o E-mail" validatorMessage="Informe um E-mail válido." required="true">        
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </h:inputText>
+
+                            <h:outputLabel  value="Telefone 1" class="output-form required" />
+                            <p:inputMask id="telefone1" value="#{pessoaJuridicaController.contato.telefone1}" mask="(99) 99999-9999" styleClass="form-control input-cpf input"   requiredMessage="Informe o Telefone" required="true"/>
+
+                            <h:outputLabel value="Telefone 2" class="output-form" />
+                            <p:inputMask id="telefone2" value="#{pessoaJuridicaController.contato.telefone2}" mask="(99) 99999-9999" styleClass="form-control input-cpf input"/>
+
+                        </h:panelGrid>
+
+                        <div class="col-md-12" style="margin-top: 40px">          
+                            <div class="form-group"> 
+                                <p:commandLink value="Salvar alterações" action="#{pessoaJuridicaController.salvar()}" update="messages" style="color: #fff"  styleClass="btn btn-primary btn-space" />
+                                <h:commandButton onclick="dlg1_edit_pj.hide()" value="Fechar" class="btn btn-default btn-space" />                
+                            </div>
+                        </div>
+                    </h:form>
+                </p:dialog>
+
+                <p:dialog id="id_edit_pf" widgetVar="dlgl_edit_pf" header="Alterar cadastro"  modal="false" minHeight="300" width="350px" resizable="false" closable="true" >
+                    <h:form id="form_pf">
+                        <p:messages id="messages" showDetail="true" closable="true" /> 
+                        <h:panelGrid style="margin-top: 10px;" id='painel_cadastro' width="100%" columns="1">
+                            <h:outputLabel value="Perfil" class="output-form required"  />                
+                            <p:selectOneMenu 
+                                id="perfil"
+                                value="#{pessoaFisicaController.pf.perfil}"
+                                converter="perfilConverter"
+                                class="input"
+                                required="true"
+                                requiredMessage="Informe o Perfil"
+                                style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+
+                                <f:selectItem
+                                    itemLabel="Selecione o Perfil"
+                                    itemValue="" />
+
+                                <f:selectItems
+                                    value="#{perfilController.lista}"
+                                    var="t"
+                                    itemLabel="#{t.descricao} "
+                                    itemValue="#{t}"
+                                    />
+                            </p:selectOneMenu>
+                            <h:outputLabel value="CPF" class="output-form required" />
+                            <p:inputMask id="cnpj" value="#{pessoaFisicaController.pf.cpf}" mask="99*.999.999-99" styleClass="form-control input-cpf input"  requiredMessage="Informe o CPF" required="true" />
+                            
+                            <h:outputLabel value="Nome" class="output-form required" />
+                            <h:inputText label="nome" value="#{pessoaFisicaController.pf.nome}" styleClass="form-control input" requiredMessage="Informe o Nome" required="true"/>
+
+                            <h:outputLabel value="E-mail" class="output-form required" />
+                            <h:inputText id="email" value="#{pessoaFisicaController.contato.email}" styleClass="form-control input" requiredMessage="Informe o E-mail" validatorMessage="Informe um E-mail válido." required="true">        
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </h:inputText>
+
+                            <h:outputLabel  value="Telefone 1" class="output-form required" />
+                            <p:inputMask id="telefone1" value="#{pessoaFisicaController.contato.telefone1}" mask="(99) 99999-9999" styleClass="form-control input-cpf input"   requiredMessage="Informe o Telefone" required="true"/>
+
+                            <h:outputLabel value="Telefone 2" class="output-form" />
+                            <p:inputMask id="telefone2" value="#{pessoaFisicaController.contato.telefone2}" mask="(99) 99999-9999" styleClass="form-control input-cpf input"/>
+
+                        </h:panelGrid>
+
+                        <div class="col-md-12" style="margin-top: 40px">          
+                            <div class="form-group"> 
+                                <p:commandLink value="Salvar alterações" action="#{pessoaFisicaController.salvar()}" update="messages" style="color: #fff" styleClass="btn btn-primary btn-space" />
+                                <h:commandButton onclick="dlg1_edit_pf.hide()" value="Fechar" class="btn btn-default btn-space" />               
+                            </div>
+                        </div>
+                    </h:form>
+                </p:dialog>
+            </div>
+        </ui:define>      
+    </ui:composition>
+</html>

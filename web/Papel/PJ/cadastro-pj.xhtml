@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="../../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Novo Cliente</span>
+        </ui:define>    
+        <ui:define name="conteudo">
+            <!--<p:growl /> -->
+            <h:form id="cadastro">
+                <h:panelGrid style="margin-top: 10px;" id='panel_cadastro' width="100%" columns="0"> 
+                    <h:outputLabel value="CNPJ" class="output-form required" />
+                    <p:inputMask id="cnpj" value="#{pessoaJuridicaController.pj.cnpj}" mask="99.999.999/9999-99" styleClass="form-control input-cpf input"  requiredMessage="Informe o CNPJ" required="true">
+                        <p:ajax event="blur" listener="#{pessoaJuridicaController.editar(pessoaJuridicaController.pj.cnpj)}" update=":#{p:component('panel_cadastro')}" global="false" ></p:ajax>
+                    </p:inputMask>
+
+
+                    <h:outputLabel value="Nome" class="output-form required" />
+                    <h:inputText label="nome" value="#{pessoaJuridicaController.pj.nome}" styleClass="form-control input" requiredMessage="Informe o Nome" required="true"/>
+
+                    <h:outputLabel value="E-mail" class="output-form required" />
+                    <h:inputText id="email" value="#{pessoaJuridicaController.contato.email}" styleClass="form-control input" requiredMessage="Informe o E-mail" validatorMessage="Informe um E-mail válido." required="true">        
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                    </h:inputText>
+
+                    <h:outputLabel  value="Telefone 1" class="output-form required" />
+                    <p:inputMask id="telefone1" value="#{pessoaJuridicaController.contato.telefone1}" mask="(99) 99999-9999" styleClass="form-control input-cpf input"   requiredMessage="Informe o Telefone" required="true"/>
+
+                    <h:outputLabel value="Telefone 2" class="output-form" />
+                    <p:inputMask id="telefone2" value="#{pessoaJuridicaController.contato.telefone2}" mask="(99) 99999-9999" styleClass="form-control input-cpf input"/>
+                </h:panelGrid>
+
+                <div class="col-md-12" style="margin-top: 40px">          
+                    <div class="form-group"> 
+                        <p:commandButton value="Finalizar" onclick="PF('dlg1_confirm').show();" class="btn btn-primary btn-space" />
+                        <p:commandButton type="submit" immediate="true" value="Voltar" ajax="false" action="/Publico/page/index.xhtml" styleClass="btn btn-default btn-space" />           
+                    </div>
+
+                    <p:dialog id="confirm" header="Finalizar cadastro?" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+                        <div style="margin-top: 10px" class="form-group"> 
+                            <h:commandButton value="Finalizar" action="#{pessoaJuridicaController.salvar()}" styleClass="btn btn-primary btn-space" />
+                            <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                        </div>
+                    </p:dialog>
+                </div>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>

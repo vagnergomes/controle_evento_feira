@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="margin: 0 auto; font-size: 22px; font-family: sans-serif; color: #999999 ; "> #{contatoController.countREST()} </span>
+            <span style="margin: 0 auto; font-size: 22px; font-family: sans-serif; color: #999999 ; "> #{contatoController.nome()} </span>
+        </ui:define>  
+        <ui:define name="conteudo">
+
+            <h:form id="inicio" style="width: 100%; margin-top: 50px">                 
+                <div class="row output-form" style="margin-top: 30px;" >
+                    <!--row-group="orderFixed:[[2,'asc'],[0,'asc']],rowGroup:{dataSrc:3,endRender:null,startRender: function ( rows, group ) {return group +' ('+rows.count()+')';}}"-->
+
+                </div> 
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

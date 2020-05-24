@@ -1,0 +1,64 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Cadastrar Usuário</ui:define>
+
+    <ui:define name="conteudo">
+      
+           
+
+            <h:form id="frmCadastro">
+          
+                <h:panelGrid columns="2" id="painel" style="margin-top: 30px; border: none; margin-left: auto; margin-right: auto;" 
+                             columnClasses="rotulo, campo">
+
+                    <p:outputLabel styleClass="output" value="Nome " />
+                    <p:inputText styleClass="input" size="50" maxlength="50" value="#{usuarioMB.usuario.nome}" label="Nome" validatorMessage="Nome não pode ser vazio." />
+
+                    <p:outputLabel styleClass="output" value="E-mail " />
+                    <p:inputText styleClass="input" id="email" size="50" value="#{usuarioMB.usuario.email}" required="true" label="Email" validatorMessage="E-mail incorreto.">
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                    </p:inputText>
+
+                    <p:outputLabel styleClass="output" value="Usuário " />
+                    <p:inputText styleClass="input" style="text-transform: lowercase;"  size="50" maxlength="16" value="#{usuarioMB.usuario.usuario}" label="Usuário" required="true" validatorMessage="Verifique se o campo Usuário está vazio. Não pode conter letras maiúsculas." >
+                    </p:inputText>
+                    
+                    <h:outputLabel styleClass="output" value="Senha " />
+                    <p:password value="#{usuarioMB.usuario.senha}" size="30" maxlength="20" feedback="true" 
+                                promptLabel="Por favor, informe a senha" weakLabel="Senha fraca" 
+                                goodLabel="Senha média" strongLabel="Senha forte" 
+                                label="Senha" validatorMessage="Senha não pode ser vazio."/>
+
+                    <h:outputLabel styleClass="output" value="Confirmar " />
+                    <p:password   value="#{usuarioMB.confirmarSenha}" size="30" maxlength="20" feedback="true" 
+                                  promptLabel="Por favor, confirme a senha" weakLabel="Senha fraca" 
+                                  goodLabel="Senha média" strongLabel="Senha forte" 
+                                  label="Confirmar" validatorMessage="Confirmar não pode ser vazio."/>
+
+                    <h:outputLabel styleClass="output" value="Permissão" />
+                    <p:selectManyMenu id="selectGrupo" value="#{usuarioMB.usuario.grupos}"
+                                      
+                                      filterMatchMode="contains" showCheckbox="true"
+                                      required="true"
+                                      requiredMessage="Selecione uma Permissão"
+                                      validatorMessage="Selecione uma Permissão">
+                        <f:selectItems value="#{grupoMB.grupos}" var="grupo"
+                                       itemValue="#{grupo}" itemLabel="#{grupo.nomeGrupo}" />
+                    </p:selectManyMenu>
+                    
+        
+                    <p:commandButton styleClass="button" value="Salvar" id="botaoSalvar"
+                                         action="#{usuarioMB.gravar}" />
+                    <a style="float:right; margin-right: 50px;" class="subtitulo" href="PesquisaUsuario.xhtml" >   
+                    cancelar 
+                    </a>
+                </h:panelGrid>
+            </h:form>
+     
+    </ui:define>
+</ui:composition>
